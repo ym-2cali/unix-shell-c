@@ -3,26 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alel-you <alel-you@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yael-maa <yael-maa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 18:08:12 by alel-you          #+#    #+#             */
-/*   Updated: 2025/07/01 01:45:13 by alel-you         ###   ########.fr       */
+/*   Updated: 2025/07/15 06:11:17 by yael-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(char **args, int fd)
 {
 	char	*pwd;
 
-	pwd = getcwd(NULL, 0);
-	if (pwd)
-	{
-		printf("%s\n", pwd);
-		free(pwd);
-		return (0);
-	}
-	else
+	if (!args)
 		return (1);
+		
+	if (fd < 0)
+		fd = 1;
+		
+	if (args[1])
+	{
+		ft_putstr_fd("pwd: too many arguments\n", 2);
+		return (1);
+	}
+	
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+	{
+		perror("pwd");
+		return (1);
+	}
+	
+	ft_putstr_fd(pwd, fd);
+	ft_putchar_fd('\n', fd);
+	free(pwd);
+	return (0);
 }
